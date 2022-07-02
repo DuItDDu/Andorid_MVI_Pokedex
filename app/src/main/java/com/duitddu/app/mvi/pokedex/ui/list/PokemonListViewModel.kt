@@ -1,23 +1,44 @@
 package com.duitddu.app.mvi.pokedex.ui.list
 
+import androidx.lifecycle.viewModelScope
 import com.duitddu.app.mvi.pokedex.data.repository.PokemonRepository
 import com.duitddu.app.mvi.pokedex.mvi.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class PokemonListViewModel @Inject constructor(
     private val repository: PokemonRepository
 ): BaseViewModel<PokemonListState, PokemonListEvent>() {
-    override fun createInitialState(): PokemonListState {
-        TODO("Not yet implemented")
+    init {
+        viewModelScope.launch {
+            runCatching {
+                repository.getPokemonPagingSource(POKEMON_LIST_LIMIT)
+            }.onSuccess {
+                setState {
+                    PokemonListState.Loaded(it)
+                }
+            }.onFailure {
+                setState {
+                    PokemonListState.Error(it)
+                }
+            }
+        }
     }
+
+    override fun createInitialState(): PokemonListState =
+        PokemonListState.Loading
 
     override fun onEvent(event: PokemonListEvent) {
-        TODO("Not yet implemented")
+        when (event) {
+            is PokemonListEvent.SelectPokemon -> {
+
+            }
+        }
     }
 
-    override val state: StateFlow<PokemonListState>
-        get() = TODO("Not yet implemented")
+    companion object {
+        private const val POKEMON_LIST_LIMIT = 50
+    }
 }

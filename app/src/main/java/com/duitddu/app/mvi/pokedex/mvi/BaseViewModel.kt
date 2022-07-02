@@ -11,7 +11,6 @@ import kotlinx.coroutines.launch
 
 abstract class BaseViewModel<S: UiState, E: UiEvent> : ViewModel() {
     abstract fun createInitialState(): S
-    abstract val state: StateFlow<S>
     abstract fun onEvent(event: E)
 
     private val initialState: S by lazy { createInitialState() }

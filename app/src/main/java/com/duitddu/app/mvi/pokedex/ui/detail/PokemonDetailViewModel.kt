@@ -20,7 +20,4 @@ class PokemonDetailViewModel @Inject constructor(
         TODO("Not yet implemented")
     }
 
-    override val state: StateFlow<PokemonDetailState>
-        get() = TODO("Not yet implemented")
-
 }
