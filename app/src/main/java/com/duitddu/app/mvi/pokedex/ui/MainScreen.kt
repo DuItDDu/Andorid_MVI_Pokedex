@@ -9,6 +9,7 @@ import androidx.navigation.compose.composable
 import com.duitddu.app.mvi.pokedex.ui.detail.PokemonDetailScreen
 import com.duitddu.app.mvi.pokedex.ui.detail.PokemonDetailViewModel
 import com.duitddu.app.mvi.pokedex.ui.list.PokemonListScreen
+import com.duitddu.app.mvi.pokedex.ui.list.PokemonListSideEffect
 import com.duitddu.app.mvi.pokedex.ui.list.PokemonListViewModel
 
 @Composable
@@ -21,7 +22,15 @@ fun MainScreen(
     ) {
         composable(Navigation.List.route) {
             val viewModel: PokemonListViewModel = hiltViewModel()
-            PokemonListScreen(viewModel)
+            PokemonListScreen(viewModel) {
+                when (it) {
+                    is PokemonListSideEffect.NavigateDetail -> {
+                        navController.navigate(
+                            Navigation.Detail.routeWithParam(it.pokemon)
+                        )
+                    }
+                }
+            }
         }
 
         composable(
