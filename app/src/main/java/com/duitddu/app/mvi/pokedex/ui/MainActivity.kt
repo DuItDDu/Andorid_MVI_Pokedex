@@ -1,4 +1,4 @@
-package com.duitddu.app.mvi.pokedex
+package com.duitddu.app.mvi.pokedex.ui
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
