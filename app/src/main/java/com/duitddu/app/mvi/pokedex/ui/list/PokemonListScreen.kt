@@ -10,6 +10,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -23,11 +24,17 @@ import com.duitddu.app.mvi.pokedex.ui.component.LoadingIndicator
 import com.duitddu.app.mvi.pokedex.ui.component.PokemonImageView
 import com.duitddu.app.mvi.pokedex.ui.theme.PokedexColorPalette
 import com.duitddu.app.mvi.pokedex.ui.utils.extension.items
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.onEach
 
 @Composable
 fun PokemonListScreen(
-    viewModel: PokemonListViewModel
+    viewModel: PokemonListViewModel,
+    onEffect: (PokemonListSideEffect) -> Unit
 ) {
+    LaunchedEffect(viewModel.effect) {
+        viewModel.effect.onEach { onEffect(it) }.collect()
+    }
     Surface(
         color = MaterialTheme.colors.surface,
         modifier = Modifier.fillMaxSize()
@@ -40,7 +47,7 @@ fun PokemonListScreen(
                 PokemonGrid(
                     items = state.pokemonPaging.collectAsLazyPagingItems(),
                     onPokemonClick = {
-
+                        viewModel.onEvent(PokemonListEvent.SelectPokemon(it))
                     }
                 )
             }

@@ -10,7 +10,7 @@ import javax.inject.Inject
 @HiltViewModel
 class PokemonListViewModel @Inject constructor(
     private val repository: PokemonRepository
-): BaseViewModel<PokemonListState, PokemonListEvent>() {
+): BaseViewModel<PokemonListState, PokemonListEvent, PokemonListSideEffect>() {
     init {
         viewModelScope.launch {
             runCatching {
@@ -33,7 +33,9 @@ class PokemonListViewModel @Inject constructor(
     override fun onEvent(event: PokemonListEvent) {
         when (event) {
             is PokemonListEvent.SelectPokemon -> {
-
+                setEffect {
+                    PokemonListSideEffect.NavigateDetail(event.pokemon)
+                }
             }
         }
     }
